@@ -35,7 +35,7 @@ class MainActivity : FragmentActivity() {
 
 
 sealed class NavigationComponent(val route:String){
-    data object SplashScreen:NavigationComponent("splash_screen")
+    object SplashScreen:NavigationComponent("splash_screen")
     object LogInScreen : NavigationComponent("log_in_screen")
     object SignUpScreen : NavigationComponent("sign_up_screen")
     object FingerPrintScreen : NavigationComponent("finger_print_screen")
