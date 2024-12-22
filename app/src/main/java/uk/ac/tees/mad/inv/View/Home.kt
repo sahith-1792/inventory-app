@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
@@ -23,11 +25,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import uk.ac.tees.mad.inv.InventoryViewModel
 import uk.ac.tees.mad.inv.NavigationComponent
+import uk.ac.tees.mad.inv.data.InventoryItem
 import uk.ac.tees.mad.inv.ui.theme.Roboto
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +71,30 @@ fun Home(navController: NavHostController, viewModel: InventoryViewModel) {
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
-            Text(text = "Total Items : ${inventoryItem.value.size}")
+            Text(
+                text = "Total Items : ${inventoryItem.value.size}",
+                fontFamily = Roboto,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(start = 12.dp)
+            )
         }
+        LazyColumn(modifier = Modifier.padding(8.dp)) {
+            items(inventoryItem.value){ item ->
+                    ItemCard(item!!)
+            }
+        }
+    }
+}
+
+@Composable
+fun ItemCard(item : InventoryItem){
+    Row(modifier = Modifier.fillMaxWidth()) {
+        AsyncImage(model = item.imageUrl, contentDescription = null, modifier = Modifier.size(50.dp))
+        Column(modifier = Modifier.padding(8.dp)) {
+            Text(text = item.name, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
+            Text(text = item.category, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Text(text = item.quantity, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
     }
 }
