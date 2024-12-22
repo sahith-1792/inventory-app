@@ -6,26 +6,36 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import uk.ac.tees.mad.inv.Model.InventoryItemOnline
+import uk.ac.tees.mad.inv.data.InventoryDatabase
+import uk.ac.tees.mad.inv.data.InventoryItem
 import javax.inject.Inject
 
 @HiltViewModel
 class InventoryViewModel @Inject constructor(
     private val auth : FirebaseAuth,
     private val firestore : FirebaseFirestore,
-    private val storage : FirebaseStorage
+    private val storage : FirebaseStorage,
+    private val inventoryRepository: InventoryRepository
 ) : ViewModel() {
 
     val isLoading = mutableStateOf(false)
     val isSignedIn = mutableStateOf(false)
+    private val _inventoryItems =  MutableStateFlow<List<InventoryItem?>> (emptyList())
+    val inventoryItems = _inventoryItems
 
     init {
         if (auth.currentUser!= null){
             isSignedIn.value = true
         }
+        retrieveAndStore()
     }
 
     fun signUp(context : Context, name : String, email : String, password : String){
@@ -59,6 +69,46 @@ class InventoryViewModel @Inject constructor(
         }.addOnFailureListener {
             isLoading.value = false
             Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun retrieveAndStore(){
+        isLoading.value = true
+        firestore.collection("Item").get().addOnSuccessListener {
+            val list = it.toObjects(InventoryItemOnline::class.java)
+            Log.d("Item", "item fetched from firestore successfully")
+            val newList = list.map {
+                InventoryItem(
+                    documentId = it.documentId,
+                    name = it.name,
+                    category = it.category,
+                    imageUrl = it.imageUrl,
+                    quantity = it.quantity,
+                    price = it.price,
+                    expiry = it.expiry
+                )
+            }
+            storeToDatabase(newList)
+            isLoading.value = false
+        }.addOnFailureListener {
+            isLoading.value = false
+            Log.d("Item", it.localizedMessage)
+        }
+    }
+
+    fun storeToDatabase(items : List<InventoryItem>){
+        viewModelScope.launch {
+            inventoryRepository.deleteAll()
+            inventoryRepository.insertItem(items)
+            getFromDatabase()
+        }
+    }
+
+    fun getFromDatabase() {
+        viewModelScope.launch {
+            inventoryRepository.getAll().collect { entities ->
+                _inventoryItems.value = entities
+            }
         }
     }
 

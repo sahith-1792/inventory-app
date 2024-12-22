@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -32,15 +33,30 @@ import uk.ac.tees.mad.inv.ui.theme.Roboto
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(navController: NavHostController, viewModel: InventoryViewModel) {
+    val inventoryItem = viewModel.inventoryItems.collectAsState()
     Scaffold(
-        topBar = { TopAppBar(title = { Row(modifier = Modifier.fillMaxWidth().height(50.dp)) {
-            Text(text = "Inventory App", fontSize = 30.sp, fontFamily = Roboto)
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(imageVector = Icons.Rounded.AccountCircle, contentDescription = "Profile",
-                modifier = Modifier.padding(end = 18.dp).size(50.dp))
-        } }) },
+        topBar = {
+            TopAppBar(title = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                ) {
+                    Text(text = "Inventory App", fontSize = 30.sp, fontFamily = Roboto)
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        imageVector = Icons.Rounded.AccountCircle, contentDescription = "Profile",
+                        modifier = Modifier
+                            .padding(end = 18.dp)
+                            .size(50.dp)
+                    )
+                }
+            })
+        },
         floatingActionButton = {
-            Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add Items", tint = Color.White,
+            Icon(imageVector = Icons.Rounded.Add,
+                contentDescription = "Add Items",
+                tint = Color.White,
                 modifier = Modifier
                     .padding(12.dp)
                     .size(50.dp)
@@ -50,7 +66,7 @@ fun Home(navController: NavHostController, viewModel: InventoryViewModel) {
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
-
+            Text(text = "Total Items : ${inventoryItem.value.size}")
         }
     }
 }
