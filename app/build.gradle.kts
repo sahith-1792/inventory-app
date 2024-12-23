@@ -8,7 +8,7 @@ plugins {
 
 
 android {
-    namespace = "uk.ac.tees.mad.inv" 
+    namespace = "uk.ac.tees.mad.inv"
     compileSdk = 34
 
     defaultConfig {

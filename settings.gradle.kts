@@ -18,6 +18,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
- 
+
 rootProject.name = "Inventory App"
 include(":app")
