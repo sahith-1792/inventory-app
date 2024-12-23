@@ -22,9 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,24 +79,35 @@ fun Home(navController: NavHostController, viewModel: InventoryViewModel) {
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(start = 12.dp)
             )
-        }
-        LazyColumn(modifier = Modifier.padding(8.dp)) {
-            items(inventoryItem.value){ item ->
-                    ItemCard(item!!)
+            Row(modifier = Modifier.fillMaxWidth()) {
+
+            }
+            LazyColumn(modifier = Modifier.padding(8.dp)) {
+                items(inventoryItem.value){ item ->
+                    ItemCard(item){
+                        navController.navigate(NavigationComponent.DetailScreen.createRoute(item))
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun ItemCard(item : InventoryItem){
-    Row(modifier = Modifier.fillMaxWidth()) {
-        AsyncImage(model = item.imageUrl, contentDescription = null, modifier = Modifier.size(50.dp))
+fun ItemCard(item : InventoryItem, navigateToDetail:() -> Unit){
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .height(100.dp)
+        .padding(4.dp)
+        .clickable { navigateToDetail() }) {
+        AsyncImage(model = item.imageUrl, contentDescription = null, modifier = Modifier.size(80.dp).align(Alignment.CenterVertically),
+            contentScale = ContentScale.FillBounds)
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = item.name, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
+            Text(text = item.name, fontSize = 20.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
             Text(text = item.category, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
+            Text(text = "Available Stock ${item.quantity}",  fontFamily = Roboto, color = Color(0xFF50C7B4))
         }
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = item.quantity, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
+
     }
 }

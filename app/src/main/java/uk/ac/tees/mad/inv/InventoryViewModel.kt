@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import uk.ac.tees.mad.inv.Model.InventoryItemOnline
 import uk.ac.tees.mad.inv.data.InventoryDatabase
@@ -28,8 +29,8 @@ class InventoryViewModel @Inject constructor(
 
     val isLoading = mutableStateOf(false)
     val isSignedIn = mutableStateOf(false)
-    private val _inventoryItems =  MutableStateFlow<List<InventoryItem?>> (emptyList())
-    val inventoryItems = _inventoryItems
+    private val _inventoryItems = MutableStateFlow<List<InventoryItem>>(emptyList())
+    val inventoryItems: StateFlow<List<InventoryItem>> = _inventoryItems
 
     init {
         if (auth.currentUser!= null){
@@ -77,6 +78,7 @@ class InventoryViewModel @Inject constructor(
         firestore.collection("Item").get().addOnSuccessListener {
             val list = it.toObjects(InventoryItemOnline::class.java)
             Log.d("Item", "item fetched from firestore successfully")
+            list.forEach { Log.d("Firestore", "Item: ${it.name}, ImageURL: ${it.imageUrl}") }
             val newList = list.map {
                 InventoryItem(
                     documentId = it.documentId,
@@ -96,18 +98,27 @@ class InventoryViewModel @Inject constructor(
         }
     }
 
-    fun storeToDatabase(items : List<InventoryItem>){
+    private fun storeToDatabase(items: List<InventoryItem>) {
         viewModelScope.launch {
-            inventoryRepository.deleteAll()
-            inventoryRepository.insertItem(items)
-            getFromDatabase()
+            try {
+                inventoryRepository.deleteAll()
+                inventoryRepository.insertItem(items)
+                getFromDatabase()
+            } catch (e: Exception) {
+                Log.e("Database", "Error storing items: ${e.localizedMessage}")
+            } finally {
+                isLoading.value = false
+            }
         }
     }
 
-    fun getFromDatabase() {
+    private fun getFromDatabase() {
         viewModelScope.launch {
             inventoryRepository.getAll().collect { entities ->
                 _inventoryItems.value = entities
+                Log.d("DB", entities.toString())
+                Log.d("DB", _inventoryItems.value.toString())
+                Log.d("DB", inventoryItems.value.toString())
             }
         }
     }
@@ -120,7 +131,7 @@ class InventoryViewModel @Inject constructor(
         uploadTask.addOnSuccessListener {
             imageRef.downloadUrl.addOnSuccessListener {
                 firestore.collection("Item").add(hashMapOf(
-                    "image" to it.toString(),
+                    "imageUrl" to it.toString(),
                     "name" to name,
                     "category" to category,
                     "quantity" to quantity,
