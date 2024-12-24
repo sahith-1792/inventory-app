@@ -6,19 +6,26 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,9 +44,11 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import uk.ac.tees.mad.inv.InventoryViewModel
+import uk.ac.tees.mad.inv.NavigationComponent
 import uk.ac.tees.mad.inv.R
 import java.io.File
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Add(navController: NavHostController, viewModel: InventoryViewModel) {
     val isLoading = viewModel.isLoading
@@ -88,7 +97,21 @@ fun Add(navController: NavHostController, viewModel: InventoryViewModel) {
             }
         }
 
-    Scaffold {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = {
+            Row(Modifier.fillMaxWidth()) {
+                Icon(imageVector = Icons.Rounded.KeyboardArrowLeft, contentDescription = null,
+                    modifier = Modifier.size(30.dp).clickable {
+                        navController.navigate(NavigationComponent.HomeScreen.route){
+                            popUpTo(0)
+                        }
+                    })
+                Text(text = "Add Item", modifier = Modifier.padding(start = 30.dp))
+            }
+        })
+        }
+    ) {
         Column(modifier = Modifier.padding(it)) {
             Image(
             painter = rememberImagePainter(data = imageUri2),
