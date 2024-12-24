@@ -98,6 +98,17 @@ class InventoryViewModel @Inject constructor(
         }
     }
 
+    fun deleteItem(context : Context,itemId : String){
+        isLoading.value = true
+        firestore.collection("Item").document(itemId).delete().addOnSuccessListener {
+            isLoading.value = false
+            Toast.makeText(context, "Item Deleted", Toast.LENGTH_SHORT)
+        }.addOnFailureListener {
+            isLoading.value = false
+            Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT)
+        }
+    }
+
     private fun storeToDatabase(items: List<InventoryItem>) {
         viewModelScope.launch {
             try {
