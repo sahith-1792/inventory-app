@@ -98,6 +98,22 @@ class InventoryViewModel @Inject constructor(
         }
     }
 
+    fun editItem(context : Context,documentId: String , name : String, category : String, quantity : String, price : String, expiryDate : String) {
+        isLoading.value = true
+        firestore.collection("Item").document(documentId).update(
+            "name", name,
+            "category", category,
+            "quantity", quantity,
+            "price", price,
+            "expiry", expiryDate
+        ).addOnSuccessListener {
+            Toast.makeText(context, "Item Uploaded", Toast.LENGTH_SHORT).show()
+            retrieveAndStore()
+        }.addOnFailureListener {
+            isLoading.value = false
+            Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
     fun deleteItem(context : Context,itemId : String){
         isLoading.value = true
         firestore.collection("Item").document(itemId).delete().addOnSuccessListener {
@@ -168,4 +184,5 @@ class InventoryViewModel @Inject constructor(
             Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
+
 }

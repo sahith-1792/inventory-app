@@ -102,25 +102,32 @@ fun Add(navController: NavHostController, viewModel: InventoryViewModel) {
             TopAppBar(title = {
             Row(Modifier.fillMaxWidth()) {
                 Icon(imageVector = Icons.Rounded.KeyboardArrowLeft, contentDescription = null,
-                    modifier = Modifier.size(30.dp).clickable {
-                        navController.navigate(NavigationComponent.HomeScreen.route){
-                            popUpTo(0)
-                        }
-                    })
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clickable {
+                            navController.navigate(NavigationComponent.HomeScreen.route) {
+                                popUpTo(0)
+                            }
+                        })
                 Text(text = "Add Item", modifier = Modifier.padding(start = 30.dp))
             }
         })
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
-            Image(
-            painter = rememberImagePainter(data = imageUri2),
-            contentDescription = null,
-            modifier = Modifier
+            AsyncImage(model = imageUri2, contentDescription = null, placeholder =
+                painterResource(id = R.drawable.designer), modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)
-                .padding(8.dp)
-        )
+                .padding(8.dp))
+//            Image(
+//            painter = rememberImagePainter(data = imageUri2),
+//            contentDescription = null,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(300.dp)
+//                .padding(8.dp)
+//        )
             Button(onClick = {
                 if (ContextCompat.checkSelfPermission(
                         context,

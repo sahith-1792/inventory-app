@@ -16,6 +16,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import uk.ac.tees.mad.inv.View.Add
 import uk.ac.tees.mad.inv.View.Detail
+import uk.ac.tees.mad.inv.View.Edit
 import uk.ac.tees.mad.inv.View.FingerPrintAuth
 import uk.ac.tees.mad.inv.View.Home
 import uk.ac.tees.mad.inv.View.LogIn
@@ -51,8 +52,15 @@ sealed class NavigationComponent(val route:String){
     object DetailScreen : NavigationComponent("detail_screen/{item}"){
         fun createRoute(item: InventoryItem): String {
             val json = Gson().toJson(item)
-            val encodedItem = URLEncoder.encode(json, StandardCharsets.UTF_8.toString())
+            val encodedItem = URLEncoder.encode(json, StandardCharsets.UTF_8.toString()).replace("+", "%20")
             return "detail_screen/$encodedItem"
+        }
+    }
+    object EditScreen : NavigationComponent("edit_screen/{item}"){
+        fun createRoute(item: InventoryItem): String {
+            val json = Gson().toJson(item)
+            val encodedItem = URLEncoder.encode(json, StandardCharsets.UTF_8.toString()).replace("+", "%20")
+            return "edit_screen/$encodedItem"
         }
     }
 }
@@ -92,6 +100,12 @@ fun NavigationInApp(biometricAuth: BiometricAuth) {
                 val itemJson = backStackEntry.arguments?.getString("item")
                 val item = Gson().fromJson(itemJson, InventoryItem::class.java)
                 Detail(navController = navController, viewModel = viewModel, item = item)
+            }
+            composable(route = NavigationComponent.EditScreen.route, arguments = listOf(navArgument("item") { type = NavType.StringType }))
+            { backStackEntry ->
+                val itemJson = backStackEntry.arguments?.getString("item")
+                val item = Gson().fromJson(itemJson, InventoryItem::class.java)
+                Edit(navController = navController, viewModel = viewModel, item = item)
             }
         }
     }

@@ -2,6 +2,7 @@ package uk.ac.tees.mad.inv.View
 
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowLeft
 import androidx.compose.material3.Button
@@ -35,11 +38,13 @@ import uk.ac.tees.mad.inv.InventoryViewModel
 import uk.ac.tees.mad.inv.NavigationComponent
 import uk.ac.tees.mad.inv.data.InventoryItem
 import uk.ac.tees.mad.inv.ui.theme.Roboto
+import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Detail(item: InventoryItem, viewModel: InventoryViewModel, navController: NavHostController) {
     val context = LocalContext.current
+    val scroll = rememberScrollState()
     Scaffold(
         topBar = {TopAppBar(title = {
             Row(Modifier.fillMaxWidth()) {
@@ -57,7 +62,8 @@ fun Detail(item: InventoryItem, viewModel: InventoryViewModel, navController: Na
     ) {
         Column(modifier = Modifier
             .fillMaxWidth()
-            .padding(it),
+            .padding(it)
+            ,
             horizontalAlignment = Alignment.CenterHorizontally) {
             AsyncImage(model = item.imageUrl, contentDescription = null, modifier = Modifier
                 .fillMaxWidth()
@@ -77,7 +83,9 @@ fun Detail(item: InventoryItem, viewModel: InventoryViewModel, navController: Na
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(24.dp)) {
+                    .padding(24.dp)
+                    .verticalScroll(scroll)
+            ) {
                 Text(text = "Item Description", fontSize = 22.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(Modifier.fillMaxWidth()) {
@@ -86,26 +94,30 @@ fun Detail(item: InventoryItem, viewModel: InventoryViewModel, navController: Na
                     Text(text = " : ", fontSize = 18.sp, fontFamily = Roboto, modifier = Modifier.weight(1f))
                     Text(text = item.price, fontSize = 18.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
                 }
+                Spacer(modifier = Modifier.height(10.dp))
                 Row(Modifier.fillMaxWidth()) {
                     Text(text = "Item Category", fontSize = 18.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = " : ", fontSize = 18.sp, fontFamily = Roboto, modifier = Modifier.weight(1f))
                     Text(text = item.category, fontSize = 18.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
                 }
+                Spacer(modifier = Modifier.height(10.dp))
                 Row(Modifier.fillMaxWidth()) {
                     Text(text = "Item Quantity", fontSize = 18.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = " : ", fontSize = 18.sp, fontFamily = Roboto, modifier = Modifier.weight(1f))
                     Text(text = item.quantity, fontSize = 18.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
                 }
+                Spacer(modifier = Modifier.height(10.dp))
                 Row(Modifier.fillMaxWidth()) {
                     Text(text = "Item Expiry", fontSize = 18.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = " : ", fontSize = 18.sp, fontFamily = Roboto, modifier = Modifier.weight(1f))
                     Text(text = item.expiry, fontSize = 18.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold)
                 }
+                Spacer(modifier = Modifier.height(20.dp))
                 Row(Modifier.fillMaxWidth()) {
-                    Button(onClick = { /*TODO*/ }, shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.buttonColors(Color(0xFF00483D))) {
+                    Button(onClick = { navController.navigate(NavigationComponent.EditScreen.createRoute(item)) }, shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.buttonColors(Color(0xFF00483D))) {
                         Text(text = "Edit Item")
                     }
                     Spacer(modifier = Modifier.weight(1f))
