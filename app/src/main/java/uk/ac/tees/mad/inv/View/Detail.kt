@@ -110,8 +110,8 @@ fun Detail(item: InventoryItem, viewModel: InventoryViewModel, navController: Na
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Button(onClick = {
-                        Log.d("TAG", "Detail: ${item.document}")
-                        viewModel.deleteItem(context,item.document)
+                        Log.d("TAG", "Detail: ${item.documentId}")
+                        viewModel.deleteItem(context,item.documentId)
                                      navController.popBackStack()
                                      }, shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.ui.graphics.Color.Red)) {
                         Text(text = "Delete Item")

@@ -73,7 +73,7 @@ class InventoryViewModel @Inject constructor(
         }
     }
 
-    fun retrieveAndStore(){
+    private fun retrieveAndStore(){
         isLoading.value = true
         firestore.collection("Item").get().addOnSuccessListener {
             val list = it.toObjects(InventoryItemOnline::class.java)
@@ -103,6 +103,7 @@ class InventoryViewModel @Inject constructor(
         firestore.collection("Item").document(itemId).delete().addOnSuccessListener {
             isLoading.value = false
             Toast.makeText(context, "Item Deleted", Toast.LENGTH_SHORT)
+            retrieveAndStore()
         }.addOnFailureListener {
             isLoading.value = false
             Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT)
@@ -151,10 +152,11 @@ class InventoryViewModel @Inject constructor(
                 ).addOnSuccessListener {
                     val documentId = it.id
                     firestore.collection("Item").document(documentId).update(
-                        "document", documentId
+                        "documentId", documentId
                     )
                     isLoading.value = false
                     Toast.makeText(context, "Item Uploaded", Toast.LENGTH_SHORT).show()
+                    retrieveAndStore()
                 }.addOnFailureListener {
                     isLoading.value = false
                     Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()

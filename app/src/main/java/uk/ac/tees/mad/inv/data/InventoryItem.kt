@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class InventoryItem(
     @PrimaryKey(autoGenerate = true) val id : Int = 0,
-    val document : String,
+    val documentId : String,
     val name : String,
     val category : String,
     val imageUrl : String,
