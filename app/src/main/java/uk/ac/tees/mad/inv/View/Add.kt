@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.rounded.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -115,11 +116,19 @@ fun Add(navController: NavHostController, viewModel: InventoryViewModel) {
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
-            AsyncImage(model = imageUri2, contentDescription = null, placeholder =
-                painterResource(id = R.drawable.designer), modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .padding(8.dp))
+            if (imageUri2.isNotEmpty()) {
+                AsyncImage(
+                    model = imageUri2, contentDescription = null, placeholder =
+                    painterResource(id = R.drawable.designer), modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .padding(8.dp)
+                )
+            }else{
+                Image(painter = painterResource(id = R.drawable.product), contentDescription = null, modifier = Modifier.fillMaxWidth()
+                    .height(300.dp)
+                    .padding(8.dp))
+            }
 //            Image(
 //            painter = rememberImagePainter(data = imageUri2),
 //            contentDescription = null,
