@@ -20,6 +20,7 @@ import uk.ac.tees.mad.inv.View.Edit
 import uk.ac.tees.mad.inv.View.FingerPrintAuth
 import uk.ac.tees.mad.inv.View.Home
 import uk.ac.tees.mad.inv.View.LogIn
+import uk.ac.tees.mad.inv.View.Profile
 import uk.ac.tees.mad.inv.View.SignUp
 import uk.ac.tees.mad.inv.View.Splash
 import uk.ac.tees.mad.inv.data.InventoryItem
@@ -63,6 +64,7 @@ sealed class NavigationComponent(val route:String){
             return "edit_screen/$encodedItem"
         }
     }
+    object ProfileScreen : NavigationComponent("profile_screen")
 }
 
 
@@ -106,6 +108,9 @@ fun NavigationInApp(biometricAuth: BiometricAuth) {
                 val itemJson = backStackEntry.arguments?.getString("item")
                 val item = Gson().fromJson(itemJson, InventoryItem::class.java)
                 Edit(navController = navController, viewModel = viewModel, item = item)
+            }
+            composable(route = NavigationComponent.ProfileScreen.route){
+                Profile(navController = navController, viewModel = viewModel)
             }
         }
     }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import uk.ac.tees.mad.inv.Model.InventoryItemOnline
+import uk.ac.tees.mad.inv.Model.User
 import uk.ac.tees.mad.inv.data.InventoryDatabase
 import uk.ac.tees.mad.inv.data.InventoryItem
 import javax.inject.Inject
@@ -31,10 +32,12 @@ class InventoryViewModel @Inject constructor(
     val isSignedIn = mutableStateOf(false)
     private val _inventoryItems = MutableStateFlow<List<InventoryItem>>(emptyList())
     val inventoryItems: StateFlow<List<InventoryItem>> = _inventoryItems
+    val userData = mutableStateOf<User?>(null)
 
     init {
         if (auth.currentUser!= null){
             isSignedIn.value = true
+            getUserData()
         }
         retrieveAndStore()
     }
@@ -43,12 +46,14 @@ class InventoryViewModel @Inject constructor(
         isLoading.value = true
         auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
             firestore.collection("users").document(it.user!!.uid).set(hashMapOf(
+                "uid" to it.user!!.uid,
                 "name" to name,
                 "email" to email,
                 "password" to password
             )).addOnSuccessListener {
                 isSignedIn.value = true
                 isLoading.value = false
+                getUserData()
                 Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
             }.addOnFailureListener {
                 isLoading.value = false
@@ -58,6 +63,14 @@ class InventoryViewModel @Inject constructor(
         }.addOnFailureListener {
             isLoading.value = false
             Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getUserData(){
+        val uid = auth.currentUser!!.uid
+        firestore.collection("users").document(uid).get().addOnSuccessListener {
+            userData.value = it.toObject(User::class.java)
+            Log.d("TAG", "getUserData: ${userData.value}")
         }
     }
 
@@ -107,13 +120,14 @@ class InventoryViewModel @Inject constructor(
             "price", price,
             "expiry", expiryDate
         ).addOnSuccessListener {
-            Toast.makeText(context, "Item Uploaded", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Item Updated", Toast.LENGTH_SHORT).show()
             retrieveAndStore()
         }.addOnFailureListener {
             isLoading.value = false
             Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
+
     fun deleteItem(context : Context,itemId : String){
         isLoading.value = true
         firestore.collection("Item").document(itemId).delete().addOnSuccessListener {

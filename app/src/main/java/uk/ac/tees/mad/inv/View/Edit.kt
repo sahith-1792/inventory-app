@@ -102,7 +102,7 @@ fun Edit(navController: NavHostController, viewModel: InventoryViewModel, item: 
                                 popUpTo(0)
                             }
                         })
-                    Text(text = "Add Item", modifier = Modifier.padding(start = 30.dp))
+                    Text(text = "Edit Item", modifier = Modifier.padding(start = 30.dp))
                 }
             })
         }
@@ -116,22 +116,7 @@ fun Edit(navController: NavHostController, viewModel: InventoryViewModel, item: 
                     .height(300.dp)
                     .padding(8.dp)
             )
-//            Button(onClick = {
-//                if (ContextCompat.checkSelfPermission(
-//                        context,
-//                        android.Manifest.permission.CAMERA
-//                    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
-//                ) {
-//                    imageUri = createImageUri(context)
-//                    takeImageLauncher.launch(imageUri)
-//                } else {
-//                    cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-//                }
-//            }, modifier = Modifier.align(Alignment.CenterHorizontally),
-//                shape = RoundedCornerShape(5.dp),
-//                colors = ButtonDefaults.buttonColors(Color(0xFF00483D))) {
-//                Text(text = "Click Image")
-//            }
+
             OutlinedTextField(value = itemName, onValueChange ={itemName = it}, modifier = Modifier.align(
                 Alignment.CenterHorizontally), label = { Text(
                 text = "Item Name"
