@@ -56,6 +56,9 @@ fun Home(navController: NavHostController, viewModel: InventoryViewModel) {
                         modifier = Modifier
                             .padding(end = 18.dp)
                             .size(50.dp)
+                            .clickable {
+                                navController.navigate(NavigationComponent.ProfileScreen.route)
+                            }
                     )
                 }
             })
