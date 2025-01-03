@@ -54,6 +54,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import uk.ac.tees.mad.inv.InventoryViewModel
+import uk.ac.tees.mad.inv.NavigationComponent
 import uk.ac.tees.mad.inv.ui.theme.Roboto
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -160,7 +161,7 @@ fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
                         fontSize = 16.sp,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(25.dp))
                     ProfileView(
                         info = "name",
                         toDisplay = user!!.name,
@@ -175,6 +176,15 @@ fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
                         icon = Icons.Default.Email
                     ) {
                         isEditVisible = true
+                    }
+                    Spacer(modifier = Modifier.height(25.dp))
+                    Button(onClick = {
+                        viewModel.signOut()
+                        navController.navigate(NavigationComponent.LogInScreen.route) {
+                            popUpTo(0)
+                        }
+                    }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.buttonColors(Color(0xFF00483D))) {
+                        Text(text = "Log out")
                     }
                     Spacer(modifier = Modifier.height(25.dp))
                     Text(

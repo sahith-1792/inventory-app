@@ -240,4 +240,9 @@ class InventoryViewModel @Inject constructor(
         }
     }
 
+    fun signOut(){
+        auth.signOut()
+        isSignedIn.value = false
+    }
+
 }
