@@ -1,6 +1,10 @@
 package uk.ac.tees.mad.inv.View
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -46,6 +50,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import uk.ac.tees.mad.inv.InventoryViewModel
@@ -65,6 +70,31 @@ fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
     var isChecked by remember {
         mutableStateOf(sharedPreference.getBoolean("isSwitchOn", false))
     }
+
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val takeImageLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { onSuccess ->
+            if (onSuccess) {
+                Log.d("TAG", "Add: $imageUri")
+                viewModel.updateProfilePicture(context, imageUri!!)
+            } else {
+                Log.d("TAG", "Add: Failed")
+            }
+        }
+
+    val cameraPermissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                imageUri = createImageUri(context)
+                takeImageLauncher.launch(imageUri)
+            } else {
+
+            }
+        }
+
     Scaffold {
         Box(
             modifier = Modifier
@@ -88,7 +118,16 @@ fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
                             modifier = Modifier
                                 .size(100.dp)
                                 .clickable {
-
+                                    if (ContextCompat.checkSelfPermission(
+                                            context,
+                                            android.Manifest.permission.CAMERA
+                                        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                                    ) {
+                                        imageUri = createImageUri(context)
+                                        takeImageLauncher.launch(imageUri)
+                                    } else {
+                                        cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                                    }
                                 })
                     } else {
                         Image(imageVector = Icons.Rounded.Person,
@@ -96,7 +135,16 @@ fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
                             modifier = Modifier
                                 .size(100.dp)
                                 .clickable {
-
+                                    if (ContextCompat.checkSelfPermission(
+                                            context,
+                                            android.Manifest.permission.CAMERA
+                                        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                                    ) {
+                                        imageUri = createImageUri(context)
+                                        takeImageLauncher.launch(imageUri)
+                                    } else {
+                                        cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                                    }
                                 })
                     }
                     Spacer(modifier = Modifier.height(20.dp))
@@ -172,7 +220,7 @@ fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
                                 }
                                 Spacer(modifier = Modifier.weight(1f))
                                 Button(
-                                    onClick = { /*TODO*/ }, shape = RoundedCornerShape(10.dp),
+                                    onClick = { viewModel.updateUser(context, name = name.value, email = email.value) }, shape = RoundedCornerShape(10.dp),
                                     colors = ButtonDefaults.buttonColors(Color(0xFF00483D))
                                 ) {
                                     Text(text = "Save")

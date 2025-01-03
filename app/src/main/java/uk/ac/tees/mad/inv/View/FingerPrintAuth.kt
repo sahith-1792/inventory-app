@@ -32,6 +32,7 @@ import androidx.navigation.NavHostController
 import uk.ac.tees.mad.inv.BiometricAuth
 import uk.ac.tees.mad.inv.BiometricAuthStatus
 import uk.ac.tees.mad.inv.InventoryViewModel
+import uk.ac.tees.mad.inv.NavigationComponent
 import uk.ac.tees.mad.inv.R
 import uk.ac.tees.mad.inv.ui.theme.Roboto
 
@@ -69,6 +70,9 @@ fun FingerPrintAuth(
                 fragmentActivity = activity,
                 onSuccess = {
                     message = "Success"
+                    navController.navigate(NavigationComponent.LogInScreen.route){
+                        popUpTo(0)
+                    }
                 },
                 onFailed = {
                     message = "Failed"

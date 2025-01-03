@@ -111,6 +111,47 @@ class InventoryViewModel @Inject constructor(
         }
     }
 
+    fun updateUser(context : Context,name: String, email: String){
+        isLoading.value = true
+        firestore.collection("users").document(auth.currentUser!!.uid).update(
+            "name", name,
+            "email", email
+        ).addOnSuccessListener {
+            isLoading.value = false
+            Toast.makeText(context, "User Updated", Toast.LENGTH_SHORT).show()
+            getUserData()
+        }.addOnFailureListener {
+            isLoading.value = false
+            Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun updateProfilePicture(context: Context,image: Uri){
+        isLoading.value = true
+        val storageRef = storage.reference
+        val imageRef = storageRef.child("profile_images/${image.lastPathSegment}")
+        val uploadTask = imageRef.putFile(image)
+        uploadTask.addOnSuccessListener {
+            imageRef.downloadUrl.addOnSuccessListener {
+                firestore.collection("users").document(auth.currentUser!!.uid).update(
+                    "profileImage", it).addOnSuccessListener {
+                    isLoading.value = false
+                    Toast.makeText(context, "Profile Picture Updated", Toast.LENGTH_SHORT).show()
+                    getUserData()
+                }.addOnFailureListener {
+                        isLoading.value = false
+                        Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+                    }
+                }.addOnFailureListener {
+                    isLoading.value = false
+                    Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+        }.addOnFailureListener {
+            isLoading.value = false
+            Toast.makeText(context, it.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     fun editItem(context : Context,documentId: String , name : String, category : String, quantity : String, price : String, expiryDate : String) {
         isLoading.value = true
         firestore.collection("Item").document(documentId).update(
