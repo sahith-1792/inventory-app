@@ -79,6 +79,7 @@ class InventoryViewModel @Inject constructor(
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
             isSignedIn.value = true
             isLoading.value = false
+            getUserData()
             Toast.makeText(context, "Log In Successful", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {
             isLoading.value = false

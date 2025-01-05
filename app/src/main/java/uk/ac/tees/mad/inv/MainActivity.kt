@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import uk.ac.tees.mad.inv.View.Add
 import uk.ac.tees.mad.inv.View.Detail
 import uk.ac.tees.mad.inv.View.Edit
+import uk.ac.tees.mad.inv.View.EditProfile
 import uk.ac.tees.mad.inv.View.FingerPrintAuth
 import uk.ac.tees.mad.inv.View.Home
 import uk.ac.tees.mad.inv.View.LogIn
@@ -65,6 +66,7 @@ sealed class NavigationComponent(val route:String){
         }
     }
     object ProfileScreen : NavigationComponent("profile_screen")
+    object EditProfileScreen : NavigationComponent("edit_profile_screen")
 }
 
 
@@ -111,6 +113,9 @@ fun NavigationInApp(biometricAuth: BiometricAuth) {
             }
             composable(route = NavigationComponent.ProfileScreen.route){
                 Profile(navController = navController, viewModel = viewModel)
+            }
+            composable(route = NavigationComponent.EditProfileScreen.route){
+                EditProfile(navController = navController, viewModel = viewModel)
             }
         }
     }

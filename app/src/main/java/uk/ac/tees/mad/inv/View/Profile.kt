@@ -61,9 +61,9 @@ import uk.ac.tees.mad.inv.ui.theme.Roboto
 @Composable
 fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
     val user = viewModel.userData.value
-    var isEditVisible by remember {
-        mutableStateOf(false)
-    }
+//    var isEditVisible by remember {
+//        mutableStateOf(false)
+//    }
     val name = remember { mutableStateOf(user!!.name) }
     val email = remember { mutableStateOf(user!!.email) }
     val context = LocalContext.current
@@ -167,7 +167,7 @@ fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
                         toDisplay = user!!.name,
                         icon = Icons.Default.Person
                     ) {
-                        isEditVisible = true
+                        navController.navigate(NavigationComponent.EditProfileScreen.route)
                     }
                     Spacer(modifier = Modifier.height(25.dp))
                     ProfileView(
@@ -175,7 +175,7 @@ fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
                         toDisplay = user!!.email,
                         icon = Icons.Default.Email
                     ) {
-                        isEditVisible = true
+                        navController.navigate(NavigationComponent.EditProfileScreen.route)
                     }
                     Spacer(modifier = Modifier.height(25.dp))
                     Button(onClick = {
@@ -206,40 +206,40 @@ fun Profile(navController: NavHostController, viewModel: InventoryViewModel) {
                     )
                 }
             }
-            if (isEditVisible) {
-                AlertDialog(onDismissRequest = { isEditVisible = false }) {
-                    Card(modifier = Modifier.height(300.dp)) {
-                        Column(Modifier.padding(12.dp)) {
-                            Spacer(modifier = Modifier.height(20.dp))
-                            Text(text = "Name")
-                            OutlinedTextField(
-                                value = name.value,
-                                onValueChange = { name.value = it })
-                            Text(text = "Email")
-                            OutlinedTextField(
-                                value = email.value,
-                                onValueChange = { email.value = it })
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Row {
-                                Button(
-                                    onClick = { isEditVisible = false },
-                                    shape = RoundedCornerShape(10.dp),
-                                    colors = ButtonDefaults.buttonColors(Color(0xFF00483D))
-                                ) {
-                                    Text(text = "Cancel")
-                                }
-                                Spacer(modifier = Modifier.weight(1f))
-                                Button(
-                                    onClick = { viewModel.updateUser(context, name = name.value, email = email.value) }, shape = RoundedCornerShape(10.dp),
-                                    colors = ButtonDefaults.buttonColors(Color(0xFF00483D))
-                                ) {
-                                    Text(text = "Save")
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+//            if (isEditVisible) {
+//                AlertDialog(onDismissRequest = { isEditVisible = false }) {
+//                    Card(modifier = Modifier.height(300.dp)) {
+//                        Column(Modifier.padding(12.dp)) {
+//                            Spacer(modifier = Modifier.height(20.dp))
+//                            Text(text = "Name")
+//                            OutlinedTextField(
+//                                value = name.value,
+//                                onValueChange = { name.value = it })
+//                            Text(text = "Email")
+//                            OutlinedTextField(
+//                                value = email.value,
+//                                onValueChange = { email.value = it })
+//                            Spacer(modifier = Modifier.height(10.dp))
+//                            Row {
+//                                Button(
+//                                    onClick = { isEditVisible = false },
+//                                    shape = RoundedCornerShape(10.dp),
+//                                    colors = ButtonDefaults.buttonColors(Color(0xFF00483D))
+//                                ) {
+//                                    Text(text = "Cancel")
+//                                }
+//                                Spacer(modifier = Modifier.weight(1f))
+//                                Button(
+//                                    onClick = { viewModel.updateUser(context, name = name.value, email = email.value) }, shape = RoundedCornerShape(10.dp),
+//                                    colors = ButtonDefaults.buttonColors(Color(0xFF00483D))
+//                                ) {
+//                                    Text(text = "Save")
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }

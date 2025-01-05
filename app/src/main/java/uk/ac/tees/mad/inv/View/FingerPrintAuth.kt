@@ -64,7 +64,7 @@ fun FingerPrintAuth(
             fontStyle = FontStyle.Italic)
         Button(onClick = {
             biometricAuth.promptBiometricAuth(
-                title = "Login",
+                title = "App Lock",
                 description = "Scan your fingerprint to continue",
                 negativeButtonText = "Cancel",
                 fragmentActivity = activity,
