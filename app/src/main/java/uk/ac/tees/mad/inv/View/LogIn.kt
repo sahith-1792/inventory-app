@@ -109,10 +109,10 @@ fun LogIn(navController : NavController, viewModel : InventoryViewModel) {
                 navController.navigate(NavigationComponent.SignUpScreen.route)
             },fontFamily = Roboto,
                 fontWeight = FontWeight.Normal, fontStyle = FontStyle.Italic)
-            Text(text = "or Sign in with Fingerprint",modifier = Modifier.padding(8.dp).clickable {
-                navController.navigate(NavigationComponent.FingerPrintScreen.route)
-            }, fontFamily = Roboto,
-                fontWeight = FontWeight.Normal, fontStyle = FontStyle.Italic)
+//            Text(text = "or Sign in with Fingerprint",modifier = Modifier.padding(8.dp).clickable {
+//                navController.navigate(NavigationComponent.FingerPrintScreen.route)
+//            }, fontFamily = Roboto,
+//                fontWeight = FontWeight.Normal, fontStyle = FontStyle.Italic)
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "Inventory App",
