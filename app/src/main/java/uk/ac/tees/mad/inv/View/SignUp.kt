@@ -121,7 +121,7 @@ fun SignUp(navController: NavHostController, viewModel: InventoryViewModel) {
             Text(text = "Already an user? Sign In", modifier = Modifier
                 .padding(8.dp)
                 .clickable {
-                    navController.navigate(NavigationComponent.SignUpScreen.route){
+                    navController.navigate(NavigationComponent.LogInScreen.route){
                         popUpTo(0)
                     }
                 },fontFamily = Roboto,
