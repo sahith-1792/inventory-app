@@ -6,7 +6,6 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
-
 android {
     namespace = "uk.ac.tees.mad.inv"
     compileSdk = 34
@@ -44,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
     packaging {
         resources {

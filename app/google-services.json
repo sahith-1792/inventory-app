@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "56453427306",
-    "project_id": "inventory-app-bdfd7",
+    "project_number": "797175786181",
+    "project_id": "inventory-cb305",
     "storage_bucket": "inventory-app-bdfd7.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:56453427306:android:534e92cabacb6bf8ffda13",
+        "mobilesdk_app_id": "1:797175786181:android:2dac1643f6a9052c955eac",
         "android_client_info": {
           "package_name": "uk.ac.tees.mad.inv"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCEilvGhs92WsQfODxN41cm39120RhPfWU"
+          "current_key": "AIzaSyDdepOe-lxUJsRsfSBaaNAsKdKm64X-WfQ"
         }
       ],
       "services": {
